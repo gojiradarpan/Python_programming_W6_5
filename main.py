@@ -1,69 +1,64 @@
-SEPARATOR = ";"
-
-def readValues(filename):
-    # Reads the numbers from the file and returns them as one string, e.g. "43;10"
+def NumbersList(filename):
     file = open(filename, "r", encoding="UTF-8")
-    Values = ""
+    Numbers = ""
     while True:
         line = file.readline()
         if line == "":
             break
         else:
             number = line.strip()
-            if Values == "":
-                Values = number
+            if Numbers == "":
+                Numbers = number
             else:
-                Values = Values + SEPARATOR + number
+                Numbers = Numbers + ";" + number
     file.close()
-    return Values
+    Numbers = Numbers.split(";")
+    return Numbers
 
-def Count(Numbers):
+def Count(filename):
     count = 0
+    Numbers = NumbersList(filename)
     for _ in Numbers:
         count +=1
     return count
 
-def Sum(Numbers):
+def Sum(filename):
     total = 0
-    for n in Numbers:
+    for n in NumbersList(filename):
         total += int(n)
     return total
 
-def Greatest(Numbers):
+def Greatest(filename):
+    Numbers = NumbersList(filename)
     greatest = 0
     for n in Numbers:
         if int(n) > greatest:
             greatest = int(n)
     return greatest
 
-def Average(Numbers):
-    sum = Sum(Numbers)
-    count = Count(Numbers)
+def Average(filename):
+    sum = Sum(filename)
+    count = Count(filename)
     average = sum / count
     return average
-
-def analyseValues(Values):
-    Numbers = Values.split(SEPARATOR)
-    count = Count(Numbers)
-    total = Sum(Numbers)
-    greatest = Greatest(Numbers)
-    average = float(Average(Numbers))
-
-    result = "Count;Sum;Greatest;Average\n"
-    result += f"{count};{total};{greatest};{average:.2f}\n"
-    return result
 
 def main():
     print("Program starting.")
     filename = input("Insert filename: ")
     print("#### Number analysis - START ####")
     print(f'File "{filename}" results:')
+    print("Count;Sum;Greatest;Average")
 
-    Values = readValues(filename)
-    result = analyseValues(Values)
-    print(result)
+    NumbersList(filename)
+    count = Count(filename)
+    total = Sum(filename)
+    greatest = Greatest(filename)
+    average = float(Average(filename))
 
-    print("#### Number analysis - END ####")
+    print(f"{count};{total};{greatest};{average:.2f}")
+
+    print("\n#### Number analysis - END ####")
     print("Program ending.")
 
-main()
+if __name__ == "__main__":
+    main()
